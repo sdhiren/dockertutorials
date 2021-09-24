@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taskapi
+  template:
+    metadata:
+      labels:
+        app: taskapi
+    spec:
+      containers:
+      - name: taskapi
+        image: sdhiren/taskapi-kube:latest
+        env:
+          - name: TASKS_FOLDER
+            value: tasks
+          - name: AUTH_ADDRESS
+            value: "authapi.default"

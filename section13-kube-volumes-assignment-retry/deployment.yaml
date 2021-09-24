@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: volume-kube
+spec:
+  selector:
+    matchLabels:
+      app: volume-app
+  template:
+    metadata:
+      labels:
+        app: volume-app
+    spec:
+      containers:
+        - name: kube-app
+          image: sdhiren/nodeapp-kube
+          env:
+            - name: STORY_FOLDER
+              value: 'story'
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+      volumes:
+        - name: story-volume
+          persistentVolumeClaim:
+            claimName: mypvc

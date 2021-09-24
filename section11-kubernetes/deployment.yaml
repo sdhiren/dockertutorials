@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-app-2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kube-app-2
+  template:
+    metadata:
+      labels:
+        app: kube-app-2
+    spec:
+      containers:
+      - name: kube-app-2
+        image: sdhiren/kube-image:2
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080

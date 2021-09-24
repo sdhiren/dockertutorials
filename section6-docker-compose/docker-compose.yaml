@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+    mongodb:
+        image: 'mongo'
+        # container_name: mongodb this command can be used to force docker to create containers with this name only
+        volumes:
+            - data:/data/db
+        # environment: 
+        #     MONGO_INITDB_ROOT_USERNAME: sdhiren
+        #     MONGO_INITDB_ROOT_PASSWORD: c3xs1bs
+
+        env_file: 
+            - ./env/mongo.env
+    backend:
+        build: ./backend
+        ports: 
+            - '80:80'
+        volumes: 
+            - logs:/app/logs
+            - ./backend:/app
+            - /app/node_modules
+        env_file: 
+            - ./env/backend.env
+        depends_on: 
+            - mongodb
+    frontend:
+        build: ./frontend
+        ports: 
+            - '3000:3000'
+        volumes: 
+            - ./frontend/src:/app/src
+        # following two commands are required for setting -it flag
+        stdin_open: true
+        tty: true
+        depends_on: 
+            - backend
+
+volumes: 
+    data:
+    logs:

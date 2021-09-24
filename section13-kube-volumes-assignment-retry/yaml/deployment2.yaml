@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: volume-service
+spec:
+  selector:
+    app: volume-app
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: volume-kube
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: volume-app
+  template:
+    metadata:
+      labels:
+        app: volume-app
+    spec:
+      containers:
+      - name: myapp
+        image: sdhiren/volume-kube-image:3
+        env:
+          - name: STORY_FOLDER
+            # value: 'story' 
+            valueFrom:
+              configMapKeyRef:
+                name: env-data
+                key: folder
+        volumeMounts:
+          - mountPath: /app/story
+            name: story-volume
+      volumes:
+        - name: story-volume
+          # emptyDir: {}
+          # hostPath:
+          #   path: /data
+          #   type: 
+          persistentVolumeClaim:
+            claimName: mypvc

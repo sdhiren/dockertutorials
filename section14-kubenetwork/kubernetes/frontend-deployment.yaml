@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontendapp
+  template:
+    metadata:
+      labels:
+        app: frontendapp
+    spec:
+      containers:
+      - name: frontendapp
+        image: sdhiren/frontendapp-kube:latest
+        env:
+          - name: TASK_ADDRESS
+            value: "taskapi-service.default"
